@@ -1,45 +1,66 @@
 <template>
+
     <div class="text-white mb-8">
         <div class="places-input text-gray-800">
-            <input type="text" class="w-full rounded">
+            <input type="search" id="address" class="w-full rounded" placeholder="Enter a city">
+            <p class="ml-3">Selected: <strong id="address-value">none</strong></p>
         </div>
         <div class="weather-container font-sans w-128 max-w-lg overflow-hidden rounded-lg bg-gray-900 shadow-lg mt-4">
-           <div class="current-weather flex items-center justify-between py-8 px-6">
-               <div class="flex items-center">
-                   <div>
-                       <div class="font-semibold text-6xl">{{ currentTemperature.actual }}&deg;</div>
-                       <div class="text-sm">Feels Like {{ currentTemperature.feels }}&deg;</div>
-                   </div>
-                    <div class="mx-5">
-                        <div class="font-semibold">{{ currentTemperature.summary }}</div>
-                        <div>{{ location.name }}</div>
-                    </div>
-               </div>
-               <div>
-                   <canvas id="iconCurrent" ref="iconCurrent" width="96" height="96"></canvas>
-               </div>
-           </div>
-            <div class="future-weather text-xs bg-gray-700 px-6 py-8 overflow-hidden">
-                <div v-for="(day, index) in daily" :key="index" class="flex items-center" :class="{'mt-8' : index > 0 }">
-                    <div class="w-1/6 text-gray-200 text-lg">{{ toDayOfWeek(day.time) }}</div>
-                    <div class="w-4/6 px-4 flex items-center">
-                        <div><canvas :id="`icon${index+1}`" :data-icon="toKebabCase(day.icon)" width="24" height="24"></canvas></div>
-                        <div class="ml-3">{{ day.summary }}</div>
-                    </div>
-                    <div class="w-1/4 text-right">
-                        <div>{{ Math.round(day.temperatureHigh) }}&deg;</div>
-                        <div>{{ Math.round(day.temperatureLow) }}&deg;</div>
-                    </div>
-                </div>
-            </div>
+            <current-weather
+                :actualTemp="currentTemperature.actual"
+                :feelsLike="currentTemperature.feels"
+                :summary="currentTemperature.summary"
+                :locationName="location.name"
+            ></current-weather>
+            <future-weather
+                :daily="daily"
+                :toKebabCase="toKebabCase"
+                :toDayOfWeek="toDayOfWeek"
+            ></future-weather>
+
         </div>
     </div>
 </template>
 
 <script>
+    import CurrentComponent from "./CurrentComponent";
+    import FutureComponent from "./FutureComponent";
+
     export default {
+        components: {
+            "current-weather": CurrentComponent,
+            "future-weather": FutureComponent
+        },
         mounted() {
+            var placesAutocomplete = places({
+                appId: 'plVXKLV5GWPG',
+                apiKey: '62ac411694a472c6589c95bd0d8b4869',
+                container: document.querySelector('#address')
+            }).configure({
+                type: 'city',
+                aroundLatLngViaIP: false,
+            });
+            var $address = document.querySelector('#address-value')
+            placesAutocomplete.on('change', (e) => {
+                $address.textContent = e.suggestion.value
+
+                this.location.name = `${e.suggestion.name}, ${e.suggestion.country}`
+                this.location.lat = e.suggestion.latlng.lat
+                this.location.lng = e.suggestion.latlng.lng
+
+            });
+            placesAutocomplete.on('clear', function() {
+                $address.textContent = 'none';
+            });
             this.fetchWeather();
+        },
+        watch: {
+          location: {
+              handler(newValue, oldValue) {
+                  this.fetchWeather()
+              },
+              deep: true
+          }
         },
         data() {
           return {

@@ -2054,9 +2054,9 @@ module.exports = {
 
 /***/ }),
 
-/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/WeatherComponent.vue?vue&type=script&lang=js&":
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/CurrentComponent.vue?vue&type=script&lang=js&":
 /*!***********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/WeatherComponent.vue?vue&type=script&lang=js& ***!
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/CurrentComponent.vue?vue&type=script&lang=js& ***!
   \***********************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
@@ -2083,10 +2083,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ["actualTemp", "feelsLike", "summary", "locationName"]
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FutureComponent.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FutureComponent.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
 //
 //
 //
@@ -2104,8 +2117,85 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ["daily", "toKebabCase", "toDayOfWeek"]
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/WeatherComponent.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/WeatherComponent.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _CurrentComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CurrentComponent */ "./resources/js/components/CurrentComponent.vue");
+/* harmony import */ var _FutureComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FutureComponent */ "./resources/js/components/FutureComponent.vue");
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  components: {
+    "current-weather": _CurrentComponent__WEBPACK_IMPORTED_MODULE_0__["default"],
+    "future-weather": _FutureComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
   mounted: function mounted() {
+    var _this = this;
+
+    var placesAutocomplete = places({
+      appId: 'plVXKLV5GWPG',
+      apiKey: '62ac411694a472c6589c95bd0d8b4869',
+      container: document.querySelector('#address')
+    }).configure({
+      type: 'city',
+      aroundLatLngViaIP: false
+    });
+    var $address = document.querySelector('#address-value');
+    placesAutocomplete.on('change', function (e) {
+      $address.textContent = e.suggestion.value;
+      _this.location.name = "".concat(e.suggestion.name, ", ").concat(e.suggestion.country);
+      _this.location.lat = e.suggestion.latlng.lat;
+      _this.location.lng = e.suggestion.latlng.lng;
+    });
+    placesAutocomplete.on('clear', function () {
+      $address.textContent = 'none';
+    });
     this.fetchWeather();
+  },
+  watch: {
+    location: {
+      handler: function handler(newValue, oldValue) {
+        this.fetchWeather();
+      },
+      deep: true
+    }
   },
   data: function data() {
     return {
@@ -2125,22 +2215,22 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     fetchWeather: function fetchWeather() {
-      var _this = this;
+      var _this2 = this;
 
       var skycons = new Skycons({
         'color': 'white'
       });
       axios.get("/api/weather?lat=".concat(this.location.lat, "&lng=").concat(this.location.lng)) // .then(response => console.log(response.data))
       .then(function (response) {
-        _this.currentTemperature.actual = Math.round(response.data.currently.temperature);
-        _this.currentTemperature.feels = Math.round(response.data.currently.apparentTemperature);
-        _this.currentTemperature.summary = response.data.currently.summary;
-        _this.currentTemperature.icon = _this.toKebabCase(response.data.currently.icon);
-        _this.daily = response.data.daily.data;
-        skycons.add('iconCurrent', _this.currentTemperature.icon);
+        _this2.currentTemperature.actual = Math.round(response.data.currently.temperature);
+        _this2.currentTemperature.feels = Math.round(response.data.currently.apparentTemperature);
+        _this2.currentTemperature.summary = response.data.currently.summary;
+        _this2.currentTemperature.icon = _this2.toKebabCase(response.data.currently.icon);
+        _this2.daily = response.data.daily.data;
+        skycons.add('iconCurrent', _this2.currentTemperature.icon);
         skycons.play();
 
-        _this.$nextTick(function () {
+        _this2.$nextTick(function () {
           skycons.add('icon1', document.getElementById('icon1').getAttribute('data-icon'));
           skycons.add('icon2', document.getElementById('icon2').getAttribute('data-icon'));
           skycons.add('icon3', document.getElementById('icon3').getAttribute('data-icon'));
@@ -37630,6 +37720,84 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
+/***/ "./resources/js/components/CurrentComponent.vue":
+/*!******************************************************!*\
+  !*** ./resources/js/components/CurrentComponent.vue ***!
+  \******************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _CurrentComponent_vue_vue_type_template_id_5e647022___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./CurrentComponent.vue?vue&type=template&id=5e647022& */ "./resources/js/components/CurrentComponent.vue?vue&type=template&id=5e647022&");
+/* harmony import */ var _CurrentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./CurrentComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/CurrentComponent.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _CurrentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _CurrentComponent_vue_vue_type_template_id_5e647022___WEBPACK_IMPORTED_MODULE_0__.render,
+  _CurrentComponent_vue_vue_type_template_id_5e647022___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/CurrentComponent.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/FutureComponent.vue":
+/*!*****************************************************!*\
+  !*** ./resources/js/components/FutureComponent.vue ***!
+  \*****************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _FutureComponent_vue_vue_type_template_id_5b9c8c42___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FutureComponent.vue?vue&type=template&id=5b9c8c42& */ "./resources/js/components/FutureComponent.vue?vue&type=template&id=5b9c8c42&");
+/* harmony import */ var _FutureComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./FutureComponent.vue?vue&type=script&lang=js& */ "./resources/js/components/FutureComponent.vue?vue&type=script&lang=js&");
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! !../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _FutureComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _FutureComponent_vue_vue_type_template_id_5b9c8c42___WEBPACK_IMPORTED_MODULE_0__.render,
+  _FutureComponent_vue_vue_type_template_id_5b9c8c42___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/FutureComponent.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/WeatherComponent.vue":
 /*!******************************************************!*\
   !*** ./resources/js/components/WeatherComponent.vue ***!
@@ -37669,6 +37837,38 @@ component.options.__file = "resources/js/components/WeatherComponent.vue"
 
 /***/ }),
 
+/***/ "./resources/js/components/CurrentComponent.vue?vue&type=script&lang=js&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/CurrentComponent.vue?vue&type=script&lang=js& ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CurrentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CurrentComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/CurrentComponent.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_CurrentComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/FutureComponent.vue?vue&type=script&lang=js&":
+/*!******************************************************************************!*\
+  !*** ./resources/js/components/FutureComponent.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FutureComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FutureComponent.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5[0].rules[0].use[0]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FutureComponent.vue?vue&type=script&lang=js&");
+ /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_node_modules_babel_loader_lib_index_js_clonedRuleSet_5_0_rules_0_use_0_node_modules_vue_loader_lib_index_js_vue_loader_options_FutureComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
 /***/ "./resources/js/components/WeatherComponent.vue?vue&type=script&lang=js&":
 /*!*******************************************************************************!*\
   !*** ./resources/js/components/WeatherComponent.vue?vue&type=script&lang=js& ***!
@@ -37685,6 +37885,40 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/CurrentComponent.vue?vue&type=template&id=5e647022&":
+/*!*************************************************************************************!*\
+  !*** ./resources/js/components/CurrentComponent.vue?vue&type=template&id=5e647022& ***!
+  \*************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CurrentComponent_vue_vue_type_template_id_5e647022___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CurrentComponent_vue_vue_type_template_id_5e647022___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_CurrentComponent_vue_vue_type_template_id_5e647022___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./CurrentComponent.vue?vue&type=template&id=5e647022& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/CurrentComponent.vue?vue&type=template&id=5e647022&");
+
+
+/***/ }),
+
+/***/ "./resources/js/components/FutureComponent.vue?vue&type=template&id=5b9c8c42&":
+/*!************************************************************************************!*\
+  !*** ./resources/js/components/FutureComponent.vue?vue&type=template&id=5b9c8c42& ***!
+  \************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FutureComponent_vue_vue_type_template_id_5b9c8c42___WEBPACK_IMPORTED_MODULE_0__.render),
+/* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FutureComponent_vue_vue_type_template_id_5b9c8c42___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_FutureComponent_vue_vue_type_template_id_5b9c8c42___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./FutureComponent.vue?vue&type=template&id=5b9c8c42& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FutureComponent.vue?vue&type=template&id=5b9c8c42&");
+
+
+/***/ }),
+
 /***/ "./resources/js/components/WeatherComponent.vue?vue&type=template&id=5ab36d54&":
 /*!*************************************************************************************!*\
   !*** ./resources/js/components/WeatherComponent.vue?vue&type=template&id=5ab36d54& ***!
@@ -37698,6 +37932,132 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "staticRenderFns": () => (/* reexport safe */ _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeatherComponent_vue_vue_type_template_id_5ab36d54___WEBPACK_IMPORTED_MODULE_0__.staticRenderFns)
 /* harmony export */ });
 /* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_WeatherComponent_vue_vue_type_template_id_5ab36d54___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib/index.js??vue-loader-options!./WeatherComponent.vue?vue&type=template&id=5ab36d54& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/WeatherComponent.vue?vue&type=template&id=5ab36d54&");
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/CurrentComponent.vue?vue&type=template&id=5e647022&":
+/*!****************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/CurrentComponent.vue?vue&type=template&id=5e647022& ***!
+  \****************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass: "current-weather flex items-center justify-between py-8 px-6"
+    },
+    [
+      _c("div", { staticClass: "flex items-center" }, [
+        _c("div", [
+          _c("div", { staticClass: "font-semibold text-6xl" }, [
+            _vm._v(_vm._s(_vm.actualTemp) + "°")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "text-sm" }, [
+            _vm._v("Feels Like " + _vm._s(_vm.feelsLike) + "°")
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "mx-5" }, [
+          _c("div", { staticClass: "font-semibold" }, [
+            _vm._v(_vm._s(_vm.summary))
+          ]),
+          _vm._v(" "),
+          _c("div", [_vm._v(_vm._s(_vm.locationName))])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", [
+        _c("canvas", {
+          ref: "iconCurrent",
+          attrs: { id: "iconCurrent", width: "96", height: "96" }
+        })
+      ])
+    ]
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FutureComponent.vue?vue&type=template&id=5b9c8c42&":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib/index.js??vue-loader-options!./resources/js/components/FutureComponent.vue?vue&type=template&id=5b9c8c42& ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "render": () => (/* binding */ render),
+/* harmony export */   "staticRenderFns": () => (/* binding */ staticRenderFns)
+/* harmony export */ });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    {
+      staticClass:
+        "future-weather text-xs bg-gray-700 px-6 py-8 overflow-hidden"
+    },
+    _vm._l(_vm.daily, function(day, index) {
+      return _c(
+        "div",
+        {
+          key: index,
+          staticClass: "flex items-center",
+          class: { "mt-8": index > 0 }
+        },
+        [
+          _c("div", { staticClass: "w-1/6 text-gray-200 text-lg" }, [
+            _vm._v(_vm._s(_vm.toDayOfWeek(day.time)))
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "w-4/6 px-4 flex items-center" }, [
+            _c("div", [
+              _c("canvas", {
+                attrs: {
+                  id: "icon" + (index + 1),
+                  "data-icon": _vm.toKebabCase(day.icon),
+                  width: "24",
+                  height: "24"
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "ml-3" }, [_vm._v(_vm._s(day.summary))])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "w-1/4 text-right" }, [
+            _c("div", [_vm._v(_vm._s(Math.round(day.temperatureHigh)) + "°")]),
+            _vm._v(" "),
+            _c("div", [_vm._v(_vm._s(Math.round(day.temperatureLow)) + "°")])
+          ])
+        ]
+      )
+    }),
+    0
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
 
 
 /***/ }),
@@ -37728,95 +38088,24 @@ var render = function() {
           "weather-container font-sans w-128 max-w-lg overflow-hidden rounded-lg bg-gray-900 shadow-lg mt-4"
       },
       [
-        _c(
-          "div",
-          {
-            staticClass:
-              "current-weather flex items-center justify-between py-8 px-6"
-          },
-          [
-            _c("div", { staticClass: "flex items-center" }, [
-              _c("div", [
-                _c("div", { staticClass: "font-semibold text-6xl" }, [
-                  _vm._v(_vm._s(_vm.currentTemperature.actual) + "°")
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "text-sm" }, [
-                  _vm._v(
-                    "Feels Like " + _vm._s(_vm.currentTemperature.feels) + "°"
-                  )
-                ])
-              ]),
-              _vm._v(" "),
-              _c("div", { staticClass: "mx-5" }, [
-                _c("div", { staticClass: "font-semibold" }, [
-                  _vm._v(_vm._s(_vm.currentTemperature.summary))
-                ]),
-                _vm._v(" "),
-                _c("div", [_vm._v(_vm._s(_vm.location.name))])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", [
-              _c("canvas", {
-                ref: "iconCurrent",
-                attrs: { id: "iconCurrent", width: "96", height: "96" }
-              })
-            ])
-          ]
-        ),
+        _c("current-weather", {
+          attrs: {
+            actualTemp: _vm.currentTemperature.actual,
+            feelsLike: _vm.currentTemperature.feels,
+            summary: _vm.currentTemperature.summary,
+            locationName: _vm.location.name
+          }
+        }),
         _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass:
-              "future-weather text-xs bg-gray-700 px-6 py-8 overflow-hidden"
-          },
-          _vm._l(_vm.daily, function(day, index) {
-            return _c(
-              "div",
-              {
-                key: index,
-                staticClass: "flex items-center",
-                class: { "mt-8": index > 0 }
-              },
-              [
-                _c("div", { staticClass: "w-1/6 text-gray-200 text-lg" }, [
-                  _vm._v(_vm._s(_vm.toDayOfWeek(day.time)))
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "w-4/6 px-4 flex items-center" }, [
-                  _c("div", [
-                    _c("canvas", {
-                      attrs: {
-                        id: "icon" + (index + 1),
-                        "data-icon": _vm.toKebabCase(day.icon),
-                        width: "24",
-                        height: "24"
-                      }
-                    })
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "ml-3" }, [
-                    _vm._v(_vm._s(day.summary))
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "w-1/4 text-right" }, [
-                  _c("div", [
-                    _vm._v(_vm._s(Math.round(day.temperatureHigh)) + "°")
-                  ]),
-                  _vm._v(" "),
-                  _c("div", [
-                    _vm._v(_vm._s(Math.round(day.temperatureLow)) + "°")
-                  ])
-                ])
-              ]
-            )
-          }),
-          0
-        )
-      ]
+        _c("future-weather", {
+          attrs: {
+            daily: _vm.daily,
+            toKebabCase: _vm.toKebabCase,
+            toDayOfWeek: _vm.toDayOfWeek
+          }
+        })
+      ],
+      1
     )
   ])
 }
@@ -37826,7 +38115,15 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "places-input text-gray-800" }, [
-      _c("input", { staticClass: "w-full rounded", attrs: { type: "text" } })
+      _c("input", {
+        staticClass: "w-full rounded",
+        attrs: { type: "search", id: "address", placeholder: "Enter a city" }
+      }),
+      _vm._v(" "),
+      _c("p", { staticClass: "ml-3" }, [
+        _vm._v("Selected: "),
+        _c("strong", { attrs: { id: "address-value" } }, [_vm._v("none")])
+      ])
     ])
   }
 ]

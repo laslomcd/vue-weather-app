@@ -32134,6 +32134,15 @@ video {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.ap-footer svg {
+  display: inline;
+}
+
+.app-suggestion-icon svg {
+  display: inline-block;
+  margin-top: -0.75rem;
+}
+
 @media (min-width: 640px){
   .sm\:container{
     width: 100%;

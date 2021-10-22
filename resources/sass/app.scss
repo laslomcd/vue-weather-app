@@ -9,3 +9,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.ap-footer svg {
+    display: inline;
+}
+
+.app-suggestion-icon svg {
+    @apply inline-block;
+    @apply -mt-3;
+}
